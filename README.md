@@ -46,13 +46,13 @@ devs-project-manager/
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Flutter (Dart) |
-| Backend | Supabase (PostgreSQL, Auth, Realtime, Edge Functions) |
-| State Management | Riverpod |
-| Notifications | flutter_local_notifications (mobile) + Browser Notification API (web) |
-| Sound Effects | audioplayers + custom preset assets |
+| Layer            | Technology                                                            |
+| ---------------- | --------------------------------------------------------------------- |
+| Frontend         | Flutter (Dart)                                                        |
+| Backend          | Supabase (PostgreSQL, Auth, Realtime, Edge Functions)                 |
+| State Management | Riverpod                                                              |
+| Notifications    | flutter_local_notifications (mobile) + Browser Notification API (web) |
+| Sound Effects    | audioplayers + custom preset assets                                   |
 
 ---
 
@@ -62,12 +62,8 @@ devs-project-manager/
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-org/devs-project-manager
-cd devs-project-manager
-
-# Start Supabase locally
-cd supabase
-supabase start
+git clone https://github.com/Rh4ndon/Devs-Project-Manager.git
+cd Devs-Project-Manager
 
 # Run the Flutter app
 cd ../app

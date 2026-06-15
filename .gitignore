@@ -1,0 +1,32 @@
+# Flutter
+app/.dart_tool/
+app/.packages
+app/.pub/
+app/build/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+**/pubspec.lock
+
+# Secrets / env
+**/.env
+**/.env.local
+**/.env.production
+**/lib/core/env.dart
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dart
+**/*.g.dart
+**/*.freezed.dart
+
+# Supabase local
+supabase/.branches
+supabase/.temp

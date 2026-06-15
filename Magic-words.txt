@@ -1,0 +1,3 @@
+flutter run -d chrome
+flutter run -d infinix
+flutter run -d web-server --web-port 8080
