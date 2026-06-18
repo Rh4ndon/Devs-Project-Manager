@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../checklist/screens/checklist_screen.dart';
 import '../providers/projects_provider.dart';
 
 class ProjectDetailScreen extends ConsumerWidget {
@@ -24,10 +25,7 @@ class ProjectDetailScreen extends ConsumerWidget {
           );
         }
 
-        return Scaffold(
-          appBar: AppBar(title: Text(project.name)),
-          body: const Center(child: Text('Checklist coming next')),
-        );
+        return ChecklistScreen(projectId: project.id, projectName: project.name);
       },
     );
   }

@@ -2,23 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/providers.dart';
 import '../../../shared/widgets/date_picker_dialog.dart';
 import '../providers/projects_provider.dart';
 
-class CreateProjectDialog extends ConsumerStatefulWidget {
-  const CreateProjectDialog({super.key});
+class EditProjectDialog extends ConsumerStatefulWidget {
+  final Project project;
+
+  const EditProjectDialog({super.key, required this.project});
 
   @override
-  ConsumerState<CreateProjectDialog> createState() => _CreateProjectDialogState();
+  ConsumerState<EditProjectDialog> createState() => _EditProjectDialogState();
 }
 
-class _CreateProjectDialogState extends ConsumerState<CreateProjectDialog> {
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
+class _EditProjectDialogState extends ConsumerState<EditProjectDialog> {
+  late final TextEditingController _nameController;
+  late final TextEditingController _descriptionController;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   DateTime? _deadline;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.project.name);
+    _descriptionController = TextEditingController(text: widget.project.description ?? '');
+    final raw = widget.project.deadline;
+    if (raw != null) {
+      final dt = DateTime.tryParse(raw);
+      if (dt != null) _deadline = DateTime(dt.year, dt.month, dt.day);
+    }
+  }
 
   @override
   void dispose() {
@@ -32,7 +45,7 @@ class _CreateProjectDialogState extends ConsumerState<CreateProjectDialog> {
     showDatePickerDialog(
       context: context,
       initialDate: _deadline ?? now.add(const Duration(days: 7)),
-      firstDate: now,
+      firstDate: now.subtract(const Duration(days: 365)),
       lastDate: now.add(const Duration(days: 365 * 5)),
       onSelected: (dt) => setState(() => _deadline = dt),
     );
@@ -42,11 +55,8 @@ class _CreateProjectDialogState extends ConsumerState<CreateProjectDialog> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
 
-    final userId = ref.read(authUserProvider)?.id;
-    if (userId == null) return;
-
-    final project = Project(
-      id: '',
+    await ref.read(updateProjectProvider((
+      id: widget.project.id,
       name: _nameController.text.trim(),
       description: _descriptionController.text.trim().isEmpty
           ? null
@@ -54,11 +64,8 @@ class _CreateProjectDialogState extends ConsumerState<CreateProjectDialog> {
       deadline: _deadline != null
           ? '${_deadline!.year}-${_deadline!.month.toString().padLeft(2, '0')}-${_deadline!.day.toString().padLeft(2, '0')}'
           : null,
-      ownerId: userId,
-      createdAt: DateTime.now(),
-    );
+    )).future);
 
-    await ref.read(createProjectProvider(project).future);
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -67,7 +74,7 @@ class _CreateProjectDialogState extends ConsumerState<CreateProjectDialog> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
-      title: const Text('New Project'),
+      title: const Text('Edit Project'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -119,7 +126,7 @@ class _CreateProjectDialogState extends ConsumerState<CreateProjectDialog> {
           onPressed: _isLoading ? null : _submit,
           child: _isLoading
               ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('Create'),
+              : const Text('Save'),
         ),
       ],
     );

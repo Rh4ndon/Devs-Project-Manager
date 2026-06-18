@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/projects_provider.dart';
 import '../widgets/create_project_dialog.dart';
+import '../widgets/edit_project_dialog.dart';
 import '../widgets/project_card.dart';
 
 class ProjectsScreen extends ConsumerWidget {
@@ -61,6 +62,7 @@ class ProjectsScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: ProjectCard(
                   project: projects[i],
+                  onEdit: () => _editProject(context, projects[i]),
                   onDelete: () => _deleteProject(context, ref, projects[i].id),
                 ),
               ),
@@ -68,6 +70,13 @@ class ProjectsScreen extends ConsumerWidget {
           );
         },
       ),
+    );
+  }
+
+  void _editProject(BuildContext context, Project project) {
+    showDialog(
+      context: context,
+      builder: (_) => EditProjectDialog(project: project),
     );
   }
 

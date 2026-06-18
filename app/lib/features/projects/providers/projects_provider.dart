@@ -6,6 +6,7 @@ class Project {
   final String id;
   final String name;
   final String? description;
+  final String? deadline;
   final String ownerId;
   final DateTime createdAt;
 
@@ -13,6 +14,7 @@ class Project {
     required this.id,
     required this.name,
     this.description,
+    this.deadline,
     required this.ownerId,
     required this.createdAt,
   });
@@ -22,6 +24,7 @@ class Project {
       id: map['id'] as String,
       name: map['name'] as String,
       description: map['description'] as String?,
+      deadline: map['deadline'] as String?,
       ownerId: map['owner_id'] as String,
       createdAt: DateTime.parse(map['created_at'] as String),
     );
@@ -31,6 +34,7 @@ class Project {
     return {
       'name': name,
       'description': description,
+      'deadline': deadline,
       'owner_id': ownerId,
     };
   }
@@ -61,11 +65,12 @@ final deleteProjectProvider = FutureProvider.family<void, String>((ref, projectI
   ref.invalidate(projectsProvider);
 });
 
-final updateProjectProvider = FutureProvider.family<void, ({String id, String name, String? description})>((ref, data) async {
+final updateProjectProvider = FutureProvider.family<void, ({String id, String name, String? description, String? deadline})>((ref, data) async {
   final client = ref.read(supabaseProvider);
   await client.from('projects').update({
     'name': data.name,
     if (data.description != null) 'description': data.description,
+    'deadline': data.deadline,
   }).eq('id', data.id);
   ref.invalidate(projectsProvider);
 });
